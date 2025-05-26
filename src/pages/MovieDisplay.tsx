@@ -12,10 +12,10 @@ export default function MovieDisplay() {
   const [page, setPage] = useState(1);
 
   // RTK Query hook call with query and page params
-  const { data, error, isLoading, isError } = useGetMoviesQuery(
-    { query, page },
-    { skip: query.trim() === "" }
-  );
+  const { data, error, isLoading, isError } = useGetMoviesQuery({
+    query,
+    page,
+  });
 
   const handleSearchChange = (e: ChangeEvent<HTMLInputElement>) => {
     setQuery(e.target.value);
@@ -46,11 +46,14 @@ export default function MovieDisplay() {
         />
       )}
 
-      {!isLoading && data && data.results.length === 0 && (
-        <p className="text-center text-gray-500">
-          No movies found for "{query}"
-        </p>
-      )}
+      {!isLoading &&
+        data &&
+        data.results.length === 0 &&
+        query.trim() !== "" && (
+          <p className="text-center text-gray-500">
+            No movies found for "{query}"
+          </p>
+        )}
 
       {data && data.results.length > 0 && (
         <>

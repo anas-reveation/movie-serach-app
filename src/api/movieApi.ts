@@ -23,14 +23,17 @@ export const movieApi = createApi({
   }),
   endpoints: (builder) => ({
     getMovies: builder.query<MovieResponse, { query: string; page?: number }>({
-      query: ({ query, page = 1 }) => ({
-        url: "search/movie",
-        params: {
-          api_key: API_KEY,
-          query,
-          page,
-        },
-      }),
+      query: ({ query, page = 1 }) => {
+        const isSearching = query.trim().length > 0;
+        return {
+          url: isSearching ? "search/movie" : "movie/popular",
+          params: {
+            api_key: API_KEY,
+            ...(isSearching ? { query } : {}),
+            page,
+          },
+        };
+      },
     }),
   }),
 });
